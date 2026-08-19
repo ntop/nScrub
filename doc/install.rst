@@ -50,3 +50,7 @@ nScrub
 ------
 
 The nscrub installation is pretty straightforward, just install the *nscrub* package from the repository, then move to the next chapters.
+
+.. note:: There are no default credentials for connecting to the engine via nscrub-cli or the REST API,
+   a password must be configured for the *admin* by following the instructions under the *Setting the REST API Password*
+   section in the Traffic Enforcement Configuration chapter.

@@ -11,12 +11,8 @@ Note that although this section covers the configuration using the REST API, a f
 - *nscrub-add*, a wizard tool for creating new victims with a basic configuration (further customisations are usually needed using nscrub-cli or the API).
 - *nscrub-export*, a tool for dumping the current configuration for a specific victim.
 
-Default credentials for configuring nscrub:
+Default settings for configuring nscrub:
 
-+-----------------+-----------+
-|  Username       |     admin |
-+-----------------+-----------+
-|  Password       |     admin |
 +-----------------+-----------+
 |  HTTP port      |      8880 |
 +-----------------+-----------+
@@ -27,13 +23,34 @@ Default credentials for configuring nscrub:
 
 .. note:: nScrub listens on localhost by default, please configure a different address (-G option) to use the REST API from a remote machine.
 
+There are no default credentials: a password must be explicitly configured for the *admin*
+user before the REST API/CLI will accept authentication. See *Setting the REST API Password* below.
+
 User Management
 ---------------
+
+Setting the REST API Password
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Passwords are stored in Redis as salted SHA-256 hashes under the key ``nscrub.user.<username>.password``,
+in the format ``sha256:<salt>:<hash>``, where ``<salt>`` is a random 16-byte hex string and ``<hash>`` 
+is the SHA-256 digest of ``<salt>`` concatenated with the password.
+
+To set the password for the *admin* user, run the command below, replacing *newpassword* with the
+desired password (the same command can be used for any other username by replacing *admin* in the
+Redis key):
+
+.. code-block:: console
+
+   SALT=$(openssl rand -hex 16); redis-cli SET nscrub.user.admin.password "sha256:${SALT}:$(printf '%s%s' "$SALT" 'newpassword' | openssl dgst -sha256 -r | awk '{print $1}')"
+
+If Redis listens on a non-default host/port, supply the connection details with *-h host* and
+*-p port* (or *-n db-id* for a non-default database).
 
 Changing the Password
 ~~~~~~~~~~~~~~~~~~~~~
 
-The password can be changed while nScrub is running using the REST API or the CLI.
+Once the initial admin password is set, credentials can also be managed (while nScrub is running) using the REST API or the CLI.
 
 **Using nscrub-cli:**
 
@@ -51,7 +68,7 @@ Example to change the admin password:
 
 .. code-block:: console
 
-   curl -u admin:admin "http://localhost:8880/users?action=update&username=admin&group=administrator&password=newpassword"
+   curl -u admin:<password> "http://localhost:8880/users?action=update&username=admin&group=administrator&password=newpassword"
 
 Adding and Removing Users
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,19 +85,17 @@ Adding and Removing Users
 
 .. code-block:: console
 
-   curl -u admin:admin "http://localhost:8880/users?action=add&username=john&group=administrator&password=secret"
-   curl -u admin:admin "http://localhost:8880/users?action=del&username=john"
-   curl -u admin:admin "http://localhost:8880/users?action=list"
+   curl -u admin:<password> "http://localhost:8880/users?action=add&username=john&group=administrator&password=secret"
+   curl -u admin:<password> "http://localhost:8880/users?action=del&username=john"
+   curl -u admin:<password> "http://localhost:8880/users?action=list"
 
 Password Reset (Emergency)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Passwords are stored as MD5 hashes in Redis under the key ``nscrub.user.<username>.password``.
-If you lost the admin password, you can reset it following the instructions below:
-
-1. Shutdown nscrub
-2. Run ``redis-cli del nscrub.user.admin.password``
-3. Restart nscrub to recreate the admin account with the default password ``admin``
+If you lost the admin password, set a new one directly in Redis using the same command shown in
+*Setting the REST API Password* above (no restart is required). Passwords hashed by older nScrub
+versions (a plain unsalted MD5 hash) are still accepted for backward compatibility, and are
+automatically upgraded to the salted SHA-256 format the next time that user logs in successfully.
 
 Traffic Enforcement Logic
 -------------------------
