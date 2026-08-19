@@ -18,15 +18,15 @@ or through the REST API:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/stats"
+   curl -u <user>:<password> "https://<host>:<port>/stats"
 
 Per-victim stats are available through the REST API:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/targets?action=stats&target_id=<target id>"
+   curl -u <user>:<password> "https://<host>:<port>/targets?action=stats&target_id=<target id>"
 
-Historical statistics from RRDs, both global and per-victim, are also available using a browser connecting to *http://<host>:<port>/monitor.html*
+Historical statistics from RRDs, both global and per-victim, are also available using a browser connecting to *https://<host>:<port>/monitor.html*
 
 .. note:: nScrub listens on localhost by default, please configure a different address (-G option) to connect using a browser on a remote machine.
 
@@ -49,9 +49,9 @@ Once auxiliary queues have been enabled, it is possible to configure them for ex
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/mirror/<queue set id>/type[?action=update&value={forwarded, discarded, injected, all}]"
-   curl -u <user>:<password> "http://<host>:<port>/mirror/<queue set id>/direction[?action=update&value={wan, lan, any}]"
-   curl -u <user>:<password> "http://<host>:<port>/mirror/<queue set id>/sampling[?action=update&value=<sampling rate (0 for no traffic)>]"
+   curl -u <user>:<password> "https://<host>:<port>/mirror/<queue set id>/type[?action=update&value={forwarded, discarded, injected, all}]"
+   curl -u <user>:<password> "https://<host>:<port>/mirror/<queue set id>/direction[?action=update&value={wan, lan, any}]"
+   curl -u <user>:<password> "https://<host>:<port>/mirror/<queue set id>/sampling[?action=update&value=<sampling rate (0 for no traffic)>]"
 
 The *type* parameter configures which traffic type to mirror:
 
@@ -72,9 +72,9 @@ Example:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/mirror/0/type?action=update&value=all"
-   curl -u <user>:<password> "http://<host>:<port>/mirror/0/direction?action=update&value=wan"
-   curl -u <user>:<password> "http://<host>:<port>/mirror/0/sampling?action=update&value=100"
+   curl -u <user>:<password> "https://<host>:<port>/mirror/0/type?action=update&value=all"
+   curl -u <user>:<password> "https://<host>:<port>/mirror/0/direction?action=update&value=wan"
+   curl -u <user>:<password> "https://<host>:<port>/mirror/0/sampling?action=update&value=100"
 
 Using the CLI tool:
 

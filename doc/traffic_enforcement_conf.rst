@@ -68,7 +68,7 @@ Example to change the admin password:
 
 .. code-block:: console
 
-   curl -u admin:<password> "http://localhost:8880/users?action=update&username=admin&group=administrator&password=newpassword"
+   curl -u admin:<password> "https://localhost:4443/users?action=update&username=admin&group=administrator&password=newpassword"
 
 Adding and Removing Users
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -85,9 +85,9 @@ Adding and Removing Users
 
 .. code-block:: console
 
-   curl -u admin:<password> "http://localhost:8880/users?action=add&username=john&group=administrator&password=secret"
-   curl -u admin:<password> "http://localhost:8880/users?action=del&username=john"
-   curl -u admin:<password> "http://localhost:8880/users?action=list"
+   curl -u admin:<password> "https://localhost:4443/users?action=add&username=john&group=administrator&password=secret"
+   curl -u admin:<password> "https://localhost:4443/users?action=del&username=john"
+   curl -u admin:<password> "https://localhost:4443/users?action=list"
 
 Password Reset (Emergency)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -194,27 +194,27 @@ For proper traffic enforcement:
 
    .. code-block:: console
 
-      curl -u admin:admin "http://localhost:8880/profile/all/accept?target_id=VICTIM&profile=white&action=enable"
+      curl -u admin:admin "https://localhost:4443/profile/all/accept?target_id=VICTIM&profile=white&action=enable"
 
 2. **BLACK profile**: Set "drop all" policy
 
    .. code-block:: console
 
-      curl -u admin:admin "http://localhost:8880/profile/all/drop?target_id=VICTIM&profile=black&action=enable"
+      curl -u admin:admin "https://localhost:4443/profile/all/drop?target_id=VICTIM&profile=black&action=enable"
 
 3. **DEFAULT profile**: Configure with validation checks and "drop by default"
 
    .. code-block:: console
 
-      curl -u admin:admin "http://localhost:8880/profile/default?target_id=VICTIM&profile=default&action=update&value=drop"
-      curl -u admin:admin "http://localhost:8880/profile/tcp/syn/check_method?target_id=VICTIM&profile=default&action=update&value=rfc"
+      curl -u admin:admin "https://localhost:4443/profile/default?target_id=VICTIM&profile=default&action=update&value=drop"
+      curl -u admin:admin "https://localhost:4443/profile/tcp/syn/check_method?target_id=VICTIM&profile=default&action=update&value=rfc"
 
 4. **Dynamic list management**: Enable autopurging to automatically remove idle whitelisted IPs
 
    .. code-block:: console
 
-      curl -u admin:admin "http://localhost:8880/attackers/dynamic/autopurging?target_id=VICTIM&action=enable"
-      curl -u admin:admin "http://localhost:8880/attackers/dynamic/expiration?target_id=VICTIM&action=update&value=3600"
+      curl -u admin:admin "https://localhost:4443/attackers/dynamic/autopurging?target_id=VICTIM&action=enable"
+      curl -u admin:admin "https://localhost:4443/attackers/dynamic/expiration?target_id=VICTIM&action=update&value=3600"
 
 Please check the `Step-By-Step Guide <https://www.ntop.org/a-step-by-step-guide-for-protecting-your-network-with-nscrub/>`__ for a full (basic) configuration example.
 
@@ -230,7 +230,7 @@ Read active victims:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/targets?action=list"
+   curl -u <user>:<password> "https://<host>:<port>/targets?action=list"
 
 or do the same using the command line tool:
 
@@ -243,7 +243,7 @@ Add a new victim:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/targets?action=add&target_id=<victim name>&subnet=<subnet (CIDR notation)>"
+   curl -u <user>:<password> "https://<host>:<port>/targets?action=add&target_id=<victim name>&subnet=<subnet (CIDR notation)>"
 
 Each victim is bound to four profiles: default, black, white, and gray. These profiles define how traffic is processed based on the source IP address. For a detailed explanation of how profiles work and the traffic enforcement logic, see the "Traffic Enforcement Logic" section above.
 
@@ -253,55 +253,55 @@ It is a common practice to set the "drop all" policy to the black profile:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/all/drop?target_id=<victim name>&profile=black&action=enable"
+   curl -u <user>:<password> "https://<host>:<port>/profile/all/drop?target_id=<victim name>&profile=black&action=enable"
 
 It is also a common practice to set the "accept all" policy to the white profile:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/all/accept?target_id=<victim name>&profile=white&action=enable"
+   curl -u <user>:<password> "https://<host>:<port>/profile/all/accept?target_id=<victim name>&profile=white&action=enable"
 
 The gray profile is usually used for applying special policies to "special" IPs. For instance it is a common practice to set the "default" policy to "drop" and then specify more specific policies to let specific traffic types through.
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/default?target_id=<victim name>&profile=gray&action=update&value=drop"
+   curl -u <user>:<password> "https://<host>:<port>/profile/default?target_id=<victim name>&profile=gray&action=update&value=drop"
 
 The default profile is where the real traffic enforcement policies go, for checking unknown traffic. For instance it is also a common practice to set the default policy to drop:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/default?target_id=<victim name>&profile=default&action=update&value=drop"
+   curl -u <user>:<password> "https://<host>:<port>/profile/default?target_id=<victim name>&profile=default&action=update&value=drop"
 
 Accept ICMP:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/icmp/accept?target_id=<victim name>&profile=default&action=enable"
+   curl -u <user>:<password> "https://<host>:<port>/profile/icmp/accept?target_id=<victim name>&profile=default&action=enable"
 
 Drop UDP:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/udp/drop?target_id=<victim name>&profile=default&action=enable"
+   curl -u <user>:<password> "https://<host>:<port>/profile/udp/drop?target_id=<victim name>&profile=default&action=enable"
 
 Accept UDP port 53 (DNS):
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/udp/src/53/accept?target_id=<victim name>&profile=default&action=enable"
+   curl -u <user>:<password> "https://<host>:<port>/profile/udp/src/53/accept?target_id=<victim name>&profile=default&action=enable"
 
 Check TCP traffic:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/tcp/syn/check_method?target_id=<victim name>&profile=default&action=update&value=rfc"
+   curl -u <user>:<password> "https://<host>:<port>/profile/tcp/syn/check_method?target_id=<victim name>&profile=default&action=update&value=rfc"
 
 It is also possible to set a rate limiter (in this example per source) to set a threshold to the traffic rate.
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/rate?target_id=<victim name>&profile={black, white, gray, default}[&action=update&value=<pkts/s>]"
+   curl -u <user>:<password> "https://<host>:<port>/profile/rate?target_id=<victim name>&profile={black, white, gray, default}[&action=update&value=<pkts/s>]"
 
 Many more policies are available, please refer to the full API documentation. 
 
@@ -311,13 +311,13 @@ In order to temporarily disable traffic checks, it is possible to put the system
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/bypass?[action={enable, disable}]"
+   curl -u <user>:<password> "https://<host>:<port>/bypass?[action={enable, disable}]"
 
 or per victim:
 
 .. code-block:: console
 
-   curl -u <user>:<password> "http://<host>:<port>/profile/bypass?target_id=<victim name>&profile=default[&action={enable, disable}]"
+   curl -u <user>:<password> "https://<host>:<port>/profile/bypass?target_id=<victim name>&profile=default[&action={enable, disable}]"
 
 
 Global Settings
@@ -336,13 +336,13 @@ Application version, configuration and status
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/status
+  curl -u <user>:<password> https://<host>:<port>/status
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/
+  curl -u admin:admin https://localhost:4443/
 
 Stats
 ~~~~~
@@ -357,7 +357,7 @@ Stats
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/stats
+  curl -u <user>:<password> https://<host>:<port>/stats
 
 
 Example:
@@ -365,7 +365,7 @@ Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/stats
+  curl -u admin:admin https://localhost:4443/stats
 
 Configure system name
 ~~~~~~~~~~~~~~~~~~~~~
@@ -380,13 +380,13 @@ Configure system name
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/hostname?[action=update\&value=<NAME>]
+  curl -u <user>:<password> https://<host>:<port>/hostname?[action=update\&value=<NAME>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/hostname
+  curl -u admin:admin https://localhost:4443/hostname
 
 Configure system description
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -401,13 +401,13 @@ Configure system description
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/desc?[action=update\&value=<DESCRIPTION>]
+  curl -u <user>:<password> https://<host>:<port>/desc?[action=update\&value=<DESCRIPTION>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/desc
+  curl -u admin:admin https://localhost:4443/desc
 
 
 Configure global bypass
@@ -426,22 +426,22 @@ Note: this is a full bypass, does not handle routing (when enabled).
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/bypass?[action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/bypass?[action={enable, disable}]
 
 Example:
 
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/bypass
+  curl -u admin:admin https://localhost:4443/bypass
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/bypass?action=enable
+  curl -u admin:admin https://localhost:4443/bypass?action=enable
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/bypass?action=disable
+  curl -u admin:admin https://localhost:4443/bypass?action=disable
 
 Read the neighbor table
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -462,13 +462,13 @@ Example of manually deleting an entry: $ arp -d 192.168.1.85
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/neigh?action=list
+  curl -u <user>:<password> https://<host>:<port>/neigh?action=list
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/neigh?action=list
+  curl -u admin:admin https://localhost:4443/neigh?action=list
 
 Set WAN/LAN IP
 ~~~~~~~~~~~~~~
@@ -486,17 +486,17 @@ Set the IP address for the WAN or LAN interfaces (changes are applied on nscrub 
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/ip?action=update&interface={WAN, LAN}&value=<IP>
+  curl -u <user>:<password> https://<host>:<port>/ip?action=update&interface={WAN, LAN}&value=<IP>
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/ip
+  curl -u admin:admin https://localhost:4443/ip
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/ip?action=update\&interface=WAN\&value=10.10.10.1
+  curl -u admin:admin https://localhost:4443/ip?action=update\&interface=WAN\&value=10.10.10.1
 
 Read the routing table
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -513,13 +513,13 @@ Routing mode only.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/route?action=list
+  curl -u <user>:<password> https://<host>:<port>/route?action=list
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/route?action=list
+  curl -u admin:admin https://localhost:4443/route?action=list
 
 Update the routing table
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -537,25 +537,25 @@ Routing mode only.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/route?[action={add, del}\&destination=<CIDR>[\&gw=<IP>]]
+  curl -u <user>:<password> https://<host>:<port>/route?[action={add, del}\&destination=<CIDR>[\&gw=<IP>]]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/route
+  curl -u admin:admin https://localhost:4443/route
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/route?action=add\&destination=default\&gw=192.168.1.1
+  curl -u admin:admin https://localhost:4443/route?action=add\&destination=default\&gw=192.168.1.1
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/route?action=add\&destination=10.10.10.0/24\&gw=10.10.10.1
+  curl -u admin:admin https://localhost:4443/route?action=add\&destination=10.10.10.0/24\&gw=10.10.10.1
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/route?action=del\&destination=10.10.10.0/24
+  curl -u admin:admin https://localhost:4443/route?action=del\&destination=10.10.10.0/24
 
 Configure VLAN reforging
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -573,17 +573,17 @@ Note: to remove a mapping set Src-ID = Dest-ID
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/vlan/id/<Src-ID>/reforge?[action=update\&value=<Dest-ID>]
+  curl -u <user>:<password> https://<host>:<port>/vlan/id/<Src-ID>/reforge?[action=update\&value=<Dest-ID>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/vlan/id/2/reforge
+  curl -u admin:admin https://localhost:4443/vlan/id/2/reforge
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/vlan/id/2/reforge?action=update\&value=3
+  curl -u admin:admin https://localhost:4443/vlan/id/2/reforge?action=update\&value=3
 
 Read the VLAN reforging list
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -598,13 +598,13 @@ Read the VLAN reforging list
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/vlan/id?action=list
+  curl -u <user>:<password> https://<host>:<port>/vlan/id?action=list
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/vlan/id?action=list
+  curl -u admin:admin https://localhost:4443/vlan/id?action=list
 
 Configure traffic mirroring
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -623,21 +623,21 @@ Define how traffic is sent to the auxiliary queues.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/mirror/<queue set id>/type[?action=update\&value={forwarded, discarded, injected, all}]
+  curl -u <user>:<password> https://<host>:<port>/mirror/<queue set id>/type[?action=update\&value={forwarded, discarded, injected, all}]
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/mirror/<queue set id>/sampling[?action=update\&value=<sampling rate (0 for no traffic)>]
+  curl -u <user>:<password> https://<host>:<port>/mirror/<queue set id>/sampling[?action=update\&value=<sampling rate (0 for no traffic)>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/mirror/0/type?action=update\&value=all
+  curl -u admin:admin https://localhost:4443/mirror/0/type?action=update\&value=all
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/mirror/0/sampling?action=update\&value=1
+  curl -u admin:admin https://localhost:4443/mirror/0/sampling?action=update\&value=1
 
 Configure the runtime debug level
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -653,17 +653,17 @@ Configure the runtime debug level
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/debug[?action=update\&value=<level>]
+  curl -u <user>:<password> https://<host>:<port>/debug[?action=update\&value=<level>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/debug
+  curl -u admin:admin https://localhost:4443/debug
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/debug?action=update\&value=2
+  curl -u admin:admin https://localhost:4443/debug?action=update\&value=2
 
 Configure peer (MAC) policy 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -682,21 +682,21 @@ This is usually not needed unless you want to blacklist a peer.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/peers?action={add,del,list}[\&address=<mac>[\&value={pass, drop}]]
+  curl -u <user>:<password> https://<host>:<port>/peers?action={add,del,list}[\&address=<mac>[\&value={pass, drop}]]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/peers?action=list
+  curl -u admin:admin https://localhost:4443/peers?action=list
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/peers?action=add\&address=00:11:22:33:44:55\&policy=drop
+  curl -u admin:admin https://localhost:4443/peers?action=add\&address=00:11:22:33:44:55\&policy=drop
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/peers?action=del\&address=00:11:22:33:44:55
+  curl -u admin:admin https://localhost:4443/peers?action=del\&address=00:11:22:33:44:55
 
 Targets Management
 ------------------
@@ -714,13 +714,13 @@ Read targets list
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/targets?action=list
+  curl -u <user>:<password> https://<host>:<port>/targets?action=list
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets?action=list
+  curl -u admin:admin https://localhost:4443/targets?action=list
 
 Add/del subnets from targets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -738,17 +738,17 @@ If the target does not exists, it creates a new target.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/targets?action={add, del}\&target_id=<target id>\&subnet=<CIDR>
+  curl -u <user>:<password> https://<host>:<port>/targets?action={add, del}\&target_id=<target id>\&subnet=<CIDR>
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets?action=add\&target_id=SCRBR1\&subnet=10.10.11.1/32
+  curl -u admin:admin https://localhost:4443/targets?action=add\&target_id=SCRBR1\&subnet=10.10.11.1/32
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets?action=del\&target_id=SCRBR1\&subnet=10.10.11.1/32
+  curl -u admin:admin https://localhost:4443/targets?action=del\&target_id=SCRBR1\&subnet=10.10.11.1/32
 
 Delete a target by name
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -766,13 +766,13 @@ Use * for all targets.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/targets?action=target_del\&target_id={<target id>,*}
+  curl -u <user>:<password> https://<host>:<port>/targets?action=target_del\&target_id={<target id>,*}
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets?action=target_del\&target_id=SCRBR1
+  curl -u admin:admin https://localhost:4443/targets?action=target_del\&target_id=SCRBR1
 
 Set a description for the target
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -788,13 +788,13 @@ Set a description for the target
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/targets/desc?target_id=<target id>[\&action=update\&value=<DESCRIPTION>]
+  curl -u <user>:<password> https://<host>:<port>/targets/desc?target_id=<target id>[\&action=update\&value=<DESCRIPTION>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets/desc?target_id=SCRBR1 
+  curl -u admin:admin https://localhost:4443/targets/desc?target_id=SCRBR1 
 
 Configure VLAN reforging for traffic towards the target
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -812,17 +812,17 @@ Note: to disable reforging set Dest-ID = 0
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/targets/vlan/reforge?target_id=<target id>[\&action=update\&value=<Dest-ID>]
+  curl -u <user>:<password> https://<host>:<port>/targets/vlan/reforge?target_id=<target id>[\&action=update\&value=<Dest-ID>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets/vlan/reforge?target_id=SCRBR1 
+  curl -u admin:admin https://localhost:4443/targets/vlan/reforge?target_id=SCRBR1 
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets/vlan/reforge?target_id=SCRBR1\&action=update\&value=16
+  curl -u admin:admin https://localhost:4443/targets/vlan/reforge?target_id=SCRBR1\&action=update\&value=16
 
 Configure target type
 ~~~~~~~~~~~~~~~~~~~~~
@@ -839,17 +839,17 @@ Target types (Web server, Game server, DNS server, ISP clients, etc) are used to
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/targets/type?target_id=<target id>[\&action=update\&value={web,dns,game,isp}]
+  curl -u <user>:<password> https://<host>:<port>/targets/type?target_id=<target id>[\&action=update\&value={web,dns,game,isp}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets/type?target_id=SCRBR1
+  curl -u admin:admin https://localhost:4443/targets/type?target_id=SCRBR1
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets/type?target_id=SCRBR1\&action=update\&value=web
+  curl -u admin:admin https://localhost:4443/targets/type?target_id=SCRBR1\&action=update\&value=web
 
 Read target stats
 ~~~~~~~~~~~~~~~~~
@@ -867,13 +867,13 @@ Note: this accepts regexp (e.g. 'webserver_[0-9]*') as target id.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/targets/stats?target_id=<target id>
+  curl -u <user>:<password> https://<host>:<port>/targets/stats?target_id=<target id>
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/targets/stats?target_id=SCRBR1
+  curl -u admin:admin https://localhost:4443/targets/stats?target_id=SCRBR1
 
 Attackers Management
 --------------------
@@ -898,17 +898,17 @@ Note:
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers?target_id=<target id>\&action=list\&profile={black, white, gray, *}\&list={<list name>, *}[\&offset=<offset>][\&limit=<max items>]
+  curl -u <user>:<password> https://<host>:<port>/attackers?target_id=<target id>\&action=list\&profile={black, white, gray, *}\&list={<list name>, *}[\&offset=<offset>][\&limit=<max items>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=list\&profile=*\&list=Test
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=list\&profile=*\&list=Test
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=list\&profile=*\&list=*\&offset=0\&limit=500
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=list\&profile=*\&list=*\&offset=0\&limit=500
 
 Add/Delete attackers
 ~~~~~~~~~~~~~~~~~~~~
@@ -926,17 +926,17 @@ Add/del items from an attacker list (optionally you can specify a lifetime for a
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers?target_id=<target id>\&action={add, del}\&list=<list name>\&subnet=<CIDR>[\&profile={black, white, gray}][\&lifetime=<seconds>]
+  curl -u <user>:<password> https://<host>:<port>/attackers?target_id=<target id>\&action={add, del}\&list=<list name>\&subnet=<CIDR>[\&profile={black, white, gray}][\&lifetime=<seconds>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=add\&list=Test\&subnet=10.10.11.1/32\&profile=black
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=add\&list=Test\&subnet=10.10.11.1/32\&profile=black
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=del\&list=Test\&subnet=10.10.11.1/32
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=del\&list=Test\&subnet=10.10.11.1/32
 
 Delete an attacker list
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -951,13 +951,13 @@ Delete an attacker list
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers?target_id=<target id>\&action=list_del\&list=<list name>
+  curl -u <user>:<password> https://<host>:<port>/attackers?target_id=<target id>\&action=list_del\&list=<list name>
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=list_del\&list=Test
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=list_del\&list=Test
 
 Purge all attackers
 ~~~~~~~~~~~~~~~~~~~
@@ -974,13 +974,13 @@ This also deletes all lists.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers?target_id=<target id>\&action=purge
+  curl -u <user>:<password> https://<host>:<port>/attackers?target_id=<target id>\&action=purge
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=purge
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=purge
 
 List all attackers list
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -997,13 +997,13 @@ List all attackers lists for a target (this also returns the number of entries i
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers?target_id=<target id>\&action=list_ls
+  curl -u <user>:<password> https://<host>:<port>/attackers?target_id=<target id>\&action=list_ls
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=list_ls
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=list_ls
 
 Search attackers
 ~~~~~~~~~~~~~~~~
@@ -1022,17 +1022,17 @@ Returns the list names where the subnet is defined.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers?target_id=<target id>\&action=search\&list={<list name>, dynamic, static, *}\&profile={black, white, gray, *}\&subnet=<CIDR>
+  curl -u <user>:<password> https://<host>:<port>/attackers?target_id=<target id>\&action=search\&list={<list name>, dynamic, static, *}\&profile={black, white, gray, *}\&subnet=<CIDR>
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=search\&list=*\&profile=*\&subnet=10.10.11.1/32
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=search\&list=*\&profile=*\&subnet=10.10.11.1/32
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=search\&list=dynamic\&profile=*\&subnet=10.10.11.1/32
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=search\&list=dynamic\&profile=*\&subnet=10.10.11.1/32
 
 Read dynamic list
 ~~~~~~~~~~~~~~~~~
@@ -1049,13 +1049,13 @@ This will also include subnets in static lists.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers?target_id=<target id>\&action=list\&profile={black, white, gray}\&list=dynamic
+  curl -u <user>:<password> https://<host>:<port>/attackers?target_id=<target id>\&action=list\&profile={black, white, gray}\&list=dynamic
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers?target_id=SCRBR1\&action=list\&profile=white\&list=dynamic
+  curl -u admin:admin https://localhost:4443/attackers?target_id=SCRBR1\&action=list\&profile=white\&list=dynamic
 
 Purge dynamic list
 ~~~~~~~~~~~~~~~~~~
@@ -1070,13 +1070,13 @@ Purge dynamic list
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers/dynamic?target_id=<target id>\&action=purge
+  curl -u <user>:<password> https://<host>:<port>/attackers/dynamic?target_id=<target id>\&action=purge
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers/dynamic?target_id=SCRBR1\&action=purge
+  curl -u admin:admin https://localhost:4443/attackers/dynamic?target_id=SCRBR1\&action=purge
 
 Configure dynamic list autopurging
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1093,17 +1093,17 @@ Configure dynamic list autopurging
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers/dynamic/autopurging?target_id=<target id>[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/attackers/dynamic/autopurging?target_id=<target id>[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers/dynamic/autopurging?target_id=SCRBR1
+  curl -u admin:admin https://localhost:4443/attackers/dynamic/autopurging?target_id=SCRBR1
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers/dynamic/autopurging?target_id=SCRBR1\&action=enable
+  curl -u admin:admin https://localhost:4443/attackers/dynamic/autopurging?target_id=SCRBR1\&action=enable
 
 Configure dynamic list expiration for autopurging
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1120,17 +1120,17 @@ This is the idle timeout for IPs which are automatically whitelisted or blacklis
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/attackers/dynamic/expiration?target_id=<target id>[\&action=update\&value=<sec>]
+  curl -u <user>:<password> https://<host>:<port>/attackers/dynamic/expiration?target_id=<target id>[\&action=update\&value=<sec>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers/dynamic/expiration?target_id=SCRBR1
+  curl -u admin:admin https://localhost:4443/attackers/dynamic/expiration?target_id=SCRBR1
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/attackers/dynamic/expiration?target_id=SCRBR1\&action=update\&value=3600
+  curl -u admin:admin https://localhost:4443/attackers/dynamic/expiration?target_id=SCRBR1\&action=update\&value=3600
 
 Batch add/delete attackers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1150,11 +1150,11 @@ Example:
 
 .. code-block:: console
 
-  curl -u admin:admin -X POST http://localhost:8880/attackers?target_id=SCRBR1\&action={add, add-fast}\&list=Test\&profile=black -d '["1.1.1.1/32","2.2.2.2/32"]'
+  curl -u admin:admin -X POST https://localhost:4443/attackers?target_id=SCRBR1\&action={add, add-fast}\&list=Test\&profile=black -d '["1.1.1.1/32","2.2.2.2/32"]'
 
 .. code-block:: console
 
-  curl -u admin:admin -X POST http://localhost:8880/attackers?target_id=SCRBR1\&action=del\&list=Test -d '["1.1.1.1/32","2.2.2.2/32"]'
+  curl -u admin:admin -X POST https://localhost:4443/attackers?target_id=SCRBR1\&action=del\&list=Test -d '["1.1.1.1/32","2.2.2.2/32"]'
 
 Targets Profiles Configuration
 ------------------------------
@@ -1174,17 +1174,17 @@ This can be set on the 'default' profile only and overwrites all more specific p
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/bypass?target_id=<target id>\&profile=default[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/bypass?target_id=<target id>\&profile=default[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/bypass?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/bypass?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/bypass?target_id=SCRBR1\&profile=default\&action=disable
+  curl -u admin:admin https://localhost:4443/profile/bypass?target_id=SCRBR1\&profile=default\&action=disable
 
 Configure default action
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1199,17 +1199,17 @@ Configure default action
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/default?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={pass, drop}]
+  curl -u <user>:<password> https://<host>:<port>/profile/default?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={pass, drop}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/default?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/default?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/default?target_id=SCRBR1\&profile=default\&action=update\&value=drop
+  curl -u admin:admin https://localhost:4443/profile/default?target_id=SCRBR1\&profile=default\&action=update\&value=drop
 
 Rate limiting per source/dest
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1227,17 +1227,17 @@ Configure per-source (attacker) per-dest (victim) rate limiting (pkts/s)
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/rate/{src, dst}?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
+  curl -u <user>:<password> https://<host>:<port>/profile/rate/{src, dst}?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/rate/src?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/rate/src?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=100
+  curl -u admin:admin https://localhost:4443/profile/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=100
 
 Configure all traffic drop/accept
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1253,17 +1253,17 @@ Configure all traffic drop/accept
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/all/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/all/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/all/drop?target_id=SCRBR1\&profile=black
+  curl -u admin:admin https://localhost:4443/profile/all/drop?target_id=SCRBR1\&profile=black
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/all/drop?target_id=SCRBR1\&profile=black\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/all/drop?target_id=SCRBR1\&profile=black\&action=enable
 
 Read UDP/TCP/ICMP policies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1280,13 +1280,13 @@ Read a summary of the configured policies for each protocol.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/{udp, tcp, icmp}?target_id=<target id>\&profile={black, white, gray, default}
+  curl -u <user>:<password> https://<host>:<port>/profile/{udp, tcp, icmp}?target_id=<target id>\&profile={black, white, gray, default}
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/udp?target_id=SCRBR1\&profile=default
 
 Configure UDP/TCP/ICMP drop/accept
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1305,13 +1305,13 @@ This applies to all ports/types.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/{udp, tcp, icmp}/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/{udp, tcp, icmp}/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/udp/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Configure GRE Signaling drop/accept
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1330,13 +1330,13 @@ This works when decapsulation is enabled only.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/gre/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/gre/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/gre/accept?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/gre/accept?target_id=SCRBR1\&profile=default\&action=enable
 
 Configure SYN check engage mode
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1353,17 +1353,17 @@ Enable to force always on, disable to disable tcp check in any condition, thresh
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/check?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={disable, threshold, auto, enable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/check?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={disable, threshold, auto, enable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/check?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/check?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/check?target_id=SCRBR1\&profile=default\&action=update\&value=auto
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/check?target_id=SCRBR1\&profile=default\&action=update\&value=auto
 
 Configure TCP traffic threshold
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1380,13 +1380,13 @@ Set the maximum expected TCP traffic rate to feed the detection algorithm (Mbit/
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/threshold?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<Mbit/s>]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/threshold?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<Mbit/s>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/threshold?target_id=SCRBR1\&profile=default\&action=update\&value=1000
+  curl -u admin:admin https://localhost:4443/profile/tcp/threshold?target_id=SCRBR1\&profile=default\&action=update\&value=1000
 
 Configure SYN check method
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1401,17 +1401,17 @@ Configure SYN check method
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/check_method?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={rfc, proxy, bypass}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/check_method?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={rfc, proxy, bypass}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/check_method?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/check_method?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/check_method?target_id=SCRBR1\&profile=default\&action=update\&value=rfc
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/check_method?target_id=SCRBR1\&profile=default\&action=update\&value=rfc
 
 Configure SYN RFC check method threshold
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1428,17 +1428,17 @@ Maximum expected new TCP connections per second) to feed the mitigation algorith
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/rfc/threshold?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pps>
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/rfc/threshold?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pps>
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/rfc/threshold?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/rfc/threshold?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/rfc/threshold?target_id=SCRBR1\&profile=default\&action=update\&value=100
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/rfc/threshold?target_id=SCRBR1\&profile=default\&action=update\&value=100
 
 Enable whitelisting of sessions only
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1455,13 +1455,13 @@ Enable session whitelisting instead of IPs on traffic verified by the TCP check.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/wl_session_only?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/wl_session_only?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/wl_session_only?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/wl_session_only?target_id=SCRBR1\&profile=default\&action=enable
 
 Auto-engage whitelisting of sessions only
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1480,13 +1480,13 @@ The /tcp/syn/wl_session_only option is ignored when using this.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/wl_threshold?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<whitelist size>]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/wl_threshold?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<whitelist size>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/wl_threshold?target_id=SCRBR1\&profile=default\&action=update\&value=10000
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/wl_threshold?target_id=SCRBR1\&profile=default\&action=update\&value=10000
 
 Configure SYN rate limiting
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1504,17 +1504,17 @@ Limit per source or dest (pkts/s)
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/rate/{src, dst}?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/rate/{src, dst}?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/rate/src?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/rate/src?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=20
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=20
 
 Configure Auto-Blacklist
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1532,13 +1532,13 @@ It is recommended to also enable /attackers/autopurging.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/auto_blacklist?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/auto_blacklist?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/auto_blacklist?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/auto_blacklist?target_id=SCRBR1\&profile=default\&action=enable
 
 Configure SYN-ACK rate limiting
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1556,17 +1556,17 @@ Limit per source or dest (pkts/s)
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/synack/rate/{src, dst}?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/synack/rate/{src, dst}?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/synack/rate/src?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/tcp/synack/rate/src?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/synack/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=20
+  curl -u admin:admin https://localhost:4443/profile/tcp/synack/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=20
 
 Configure SYN-ACK session whitelisting
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1581,13 +1581,13 @@ Configure SYN-ACK session whitelisting
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/synack/wl_session?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/synack/wl_session?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/synack/wl_session?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/tcp/synack/wl_session?target_id=SCRBR1\&profile=default\&action=enable
 
 Configure SYN-ACK TCP-Amplification protection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1602,13 +1602,13 @@ Configure SYN-ACK TCP-Amplification protection
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/synack/tcp_amp_protection?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/synack/tcp_amp_protection?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/synack/tcp_amp_protection?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/tcp/synack/tcp_amp_protection?target_id=SCRBR1\&profile=default\&action=enable
 
 Drop TCP SYN with seq num 0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1623,17 +1623,17 @@ Drop TCP SYN with seq num 0
  
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/noseqnum/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/noseqnum/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/noseqnum/drop?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/noseqnum/drop?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/noseqnum/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/noseqnum/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Drop TCP SYN with no options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -1648,17 +1648,17 @@ Drop TCP SYN with no options
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/nooption/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/nooption/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/nooption/drop?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/nooption/drop?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/nooption/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/nooption/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Drop TCP SYN packets with payload
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -1673,17 +1673,17 @@ Drop TCP SYN packets with payload
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/tcp/syn/payload/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/payload/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/payload/drop?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/payload/drop?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/tcp/syn/payload/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/tcp/syn/payload/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Set drop/accept policy per UDP/TCP src/dst port 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1700,17 +1700,17 @@ Set drop/accept policy per UDP/TCP src/dst port
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/{udp, tcp}/{src, dst}/{port}/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/{udp, tcp}/{src, dst}/{port}/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/src/53/drop?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/udp/src/53/drop?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/src/53/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/udp/src/53/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Set min/max UDP payload length
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1726,17 +1726,17 @@ Set min/max UDP payload length
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/udp/payload/{min, max}_len?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<len>]
+  curl -u <user>:<password> https://<host>:<port>/profile/udp/payload/{min, max}_len?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<len>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/payload/min_len?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/udp/payload/min_len?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/payload/min_len?target_id=SCRBR1\&profile=default\&action=update\&value=2
+  curl -u admin:admin https://localhost:4443/profile/udp/payload/min_len?target_id=SCRBR1\&profile=default\&action=update\&value=2
 
 Drop UDP fragments
 ~~~~~~~~~~~~~~~~~~
@@ -1751,17 +1751,17 @@ Drop UDP fragments
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/udp/fragment/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/udp/fragment/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/fragment/drop?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/udp/fragment/drop?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/fragment/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/udp/fragment/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Set min/max UDP fragments payload length
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1777,17 +1777,17 @@ Set min/max UDP fragments payload length
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/udp/fragment/payload/{min, max}_len?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<len>]
+  curl -u <user>:<password> https://<host>:<port>/profile/udp/fragment/payload/{min, max}_len?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<len>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/fragment/payload/min_len?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/udp/fragment/payload/min_len?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/fragment/payload/min_len?target_id=SCRBR1\&profile=default\&action=update\&value=64
+  curl -u admin:admin https://localhost:4443/profile/udp/fragment/payload/min_len?target_id=SCRBR1\&profile=default\&action=update\&value=64
 
 Drop UDP with checksum0
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -1802,17 +1802,17 @@ Drop UDP with checksum0
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/udp/checksum0/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/udp/checksum0/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/checksum0/drop?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/udp/checksum0/drop?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/checksum0/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/udp/checksum0/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Configure UDP rate limiting
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1830,17 +1830,17 @@ Limit all UDP traffic (pkts/s) per source or destination
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/udp/rate/{src, dst}?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
+  curl -u <user>:<password> https://<host>:<port>/profile/udp/rate/{src, dst}?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/rate/src?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/udp/rate/src?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/udp/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=100
+  curl -u admin:admin https://localhost:4443/profile/udp/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=100
 
 Set drop policy per ICMP type
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1856,17 +1856,17 @@ Set drop policy per ICMP type
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/icmp/type/<icmp type>/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/icmp/type/<icmp type>/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/icmp/type/0/drop?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/icmp/type/0/drop?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/icmp/type/0/drop?target_id=SCRBR1\&profile=default\&action=disable
+  curl -u admin:admin https://localhost:4443/profile/icmp/type/0/drop?target_id=SCRBR1\&profile=default\&action=disable
 
 Set drop policy per TTL values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1883,17 +1883,17 @@ Set drop policy per TTL values
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/ip/ttl/<ttl value>/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/ip/ttl/<ttl value>/{accept, drop}?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/ip/ttl?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/ip/ttl?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/ip/ttl/24/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/ip/ttl/24/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Configure DNS check method
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1908,17 +1908,17 @@ Configure DNS check method
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/dns/request/check_method?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={forcetcp, default}]
+  curl -u <user>:<password> https://<host>:<port>/profile/dns/request/check_method?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={forcetcp, default}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/dns?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns/request/check_method?target_id=SCRBR1\&profile=default\&action=update\&value=forcetcp
+  curl -u admin:admin https://localhost:4443/profile/dns/request/check_method?target_id=SCRBR1\&profile=default\&action=update\&value=forcetcp
 
 Configure DNS rate limiting
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1936,17 +1936,17 @@ Limit DNS requests per source or transaction ID (pkts/s)
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/dns/request/rate/src?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
+  curl -u <user>:<password> https://<host>:<port>/profile/dns/request/rate/src?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pkts/s>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns/request/rate/src?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/dns/request/rate/src?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns/request/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=20
+  curl -u admin:admin https://localhost:4443/profile/dns/request/rate/src?target_id=SCRBR1\&profile=default\&action=update\&value=20
 
 Configure DNS traffic threshold
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1965,13 +1965,13 @@ This is used to feed the detection algorithm.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/dns/request/threshold?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pps>]
+  curl -u <user>:<password> https://<host>:<port>/profile/dns/request/threshold?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<pps>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns/request/threshold?target_id=SCRBR1\&profile=default\&action=update\&value=1000
+  curl -u admin:admin https://localhost:4443/profile/dns/request/threshold?target_id=SCRBR1\&profile=default\&action=update\&value=1000
 
 Set drop policy per DNS request type
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1986,17 +1986,17 @@ Set drop policy per DNS request type
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/dns/request/type/<dns query type>/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
+  curl -u <user>:<password> https://<host>:<port>/profile/dns/request/type/<dns query type>/drop?target_id=<target id>\&profile={black, white, gray, default}[\&action={enable, disable}]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns/request/type/255/drop?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/dns/request/type/255/drop?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns/request/type/255/drop?target_id=SCRBR1\&profile=default\&action=enable
+  curl -u admin:admin https://localhost:4443/profile/dns/request/type/255/drop?target_id=SCRBR1\&profile=default\&action=enable
 
 Set max DNS subdomain length
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2011,17 +2011,17 @@ Set max DNS subdomain length
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/dns/request/subdomain_max_len?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<len>]
+  curl -u <user>:<password> https://<host>:<port>/profile/dns/request/subdomain_max_len?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value=<len>]
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns/request/subdomain_max_len?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/dns/request/subdomain_max_len?target_id=SCRBR1\&profile=default
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/dns/request/subdomain_max_len?target_id=SCRBR1\&profile=default\&action=update\&value=10
+  curl -u admin:admin https://localhost:4443/profile/dns/request/subdomain_max_len?target_id=SCRBR1\&profile=default\&action=update\&value=10
 
 Hex/string pattern match
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2043,17 +2043,17 @@ Note:
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/pattern/<id>/drop?target_id=<target id>\&profile={black, white, gray, default}\&action=update\&value={hex, string},[payload+]{<offset>, any},<hex/string to match>
+  curl -u <user>:<password> https://<host>:<port>/profile/pattern/<id>/drop?target_id=<target id>\&profile={black, white, gray, default}\&action=update\&value={hex, string},[payload+]{<offset>, any},<hex/string to match>
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/pattern/1/drop?target_id=SCRBR1\&profile=default\&action=update\&value=hex,56,0954A03AC3320F
+  curl -u admin:admin https://localhost:4443/profile/pattern/1/drop?target_id=SCRBR1\&profile=default\&action=update\&value=hex,56,0954A03AC3320F
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/pattern/2/drop?target_id=SCRBR1\&profile=default\&action=update\&value=string,payload+8,Hello
+  curl -u admin:admin https://localhost:4443/profile/pattern/2/drop?target_id=SCRBR1\&profile=default\&action=update\&value=string,payload+8,Hello
 
 Read active patterns
 ~~~~~~~~~~~~~~~~~~~~
@@ -2068,13 +2068,13 @@ Read active patterns
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/pattern?target_id=<target id>\&profile={black, white, gray, default}
+  curl -u <user>:<password> https://<host>:<port>/profile/pattern?target_id=<target id>\&profile={black, white, gray, default}
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/pattern?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/pattern?target_id=SCRBR1\&profile=default
 
 HTTP request field match
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2092,17 +2092,17 @@ Note: 'label' is case sensitive, instead 'value' is compared ignoring the case.
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/http/request/field/<id>/drop?target_id=<target id>\&profile={black, white, gray, default}\&action=update\&value=<label>,<value>
+  curl -u <user>:<password> https://<host>:<port>/profile/http/request/field/<id>/drop?target_id=<target id>\&profile={black, white, gray, default}\&action=update\&value=<label>,<value>
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/http/request/field/1/drop?target_id=SCRBR1\&profile=default\&action=update\&value=User-Agent,Bot
+  curl -u admin:admin https://localhost:4443/profile/http/request/field/1/drop?target_id=SCRBR1\&profile=default\&action=update\&value=User-Agent,Bot
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/http/request/field/1/drop?target_id=SCRBR1\&profile=white\&action=update\&value=User-Agent,Bot
+  curl -u admin:admin https://localhost:4443/profile/http/request/field/1/drop?target_id=SCRBR1\&profile=white\&action=update\&value=User-Agent,Bot
 
 Read active HTTP request fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2117,13 +2117,13 @@ Read active HTTP request fields
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/http/request/field?target_id=<target id>\&profile={black, white, gray, default}
+  curl -u <user>:<password> https://<host>:<port>/profile/http/request/field?target_id=<target id>\&profile={black, white, gray, default}
 
 Example:
   
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/http/request/field?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/http/request/field?target_id=SCRBR1\&profile=default
 
 Add allowed HTTP hosts
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -2138,13 +2138,13 @@ Add allowed HTTP hosts
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/http/request/host/<id>/pass?target_id=<target id>\&profile={black, white, gray, default}\&action=update\&value=<hostname>
+  curl -u <user>:<password> https://<host>:<port>/profile/http/request/host/<id>/pass?target_id=<target id>\&profile={black, white, gray, default}\&action=update\&value=<hostname>
 
 Example:
   
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/http/request/host/1/pass?target_id=SCRBR1\&profile=default\&action=update\&value=example.com
+  curl -u admin:admin https://localhost:4443/profile/http/request/host/1/pass?target_id=SCRBR1\&profile=default\&action=update\&value=example.com
 
 Read active HTTP hosts
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -2159,13 +2159,13 @@ Read active HTTP hosts
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/profile/http/request/host?target_id=<target id>\&profile={black, white, gray, default}
+  curl -u <user>:<password> https://<host>:<port>/profile/http/request/host?target_id=<target id>\&profile={black, white, gray, default}
 
 Example:
   
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/profile/http/request/host?target_id=SCRBR1\&profile=default
+  curl -u admin:admin https://localhost:4443/profile/http/request/host?target_id=SCRBR1\&profile=default
 
 Users Management
 ----------------
@@ -2183,13 +2183,13 @@ Read users list
 
 .. code-block:: console
 
-  curl -u <user>:<password> http://<host>:<port>/users?action=list
+  curl -u <user>:<password> https://<host>:<port>/users?action=list
 
 Example:
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/users?action=list
+  curl -u admin:admin https://localhost:4443/users?action=list
 
 Add/del/update users
 ~~~~~~~~~~~~~~~~~~~~
@@ -2212,10 +2212,10 @@ Example:
 
 .. code-block:: console
 
-  curl -u admin:admin -X POST https://localhost:8880/users?action=add\&username=john\&fullname=John\&group=administrator -d '{ "password" : "temporarypassword" }'
+  curl -u admin:admin -X POST https://localhost:4443/users?action=add\&username=john\&fullname=John\&group=administrator -d '{ "password" : "temporarypassword" }'
 
 .. code-block:: console
 
-  curl -u admin:admin http://localhost:8880/users?action=del\&username=john
+  curl -u admin:admin https://localhost:4443/users?action=del\&username=john
 
 
