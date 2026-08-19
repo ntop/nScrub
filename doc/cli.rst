@@ -36,13 +36,13 @@ Please note that further configurations are usually needed to create an optimal 
    cat nscrub.conf
    targets add TEST 192.168.1.2/32
    targets add TEST 192.168.1.3/32
-   cat nscrub.conf | nscrub-cli
+   cat nscrub.conf | nscrub-cli -a admin:<password>
 
 Please refer to the *nscrub-cli* help for an updated list of commands like in the example below.
 
 .. code-block:: console
 
-   nscrub-cli
+   nscrub-cli -a admin:<password>
    localhost:8880> help
 
 nscrub-export
@@ -69,5 +69,5 @@ In the example below, we backup and restore the configuration for a target using
 .. code-block:: console
 
    nscrub-export dump webserver1 > webserver1.dump
-   cat webserver1.dump | nscrub-cli
+   cat webserver1.dump | nscrub-cli -a admin:<password>
 
