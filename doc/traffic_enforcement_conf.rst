@@ -117,8 +117,10 @@ Each virtual scrubber (victim) has four profiles that define traffic enforcement
 WAN to LAN Traffic Flow (Inbound Traffic Inspection)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Traffic arriving from the WAN interface destined to protected subnets (victims) is inspected based on
-the source IP address and the matching profile:
+Traffic arriving from the WAN interface destined to protected subnets (targets/victims) is first checked
+against the global attackers list based on the source IP address. If there is no specific match there
+(or the target ignores the global list), it is checked against the target attackers list, always based 
+on the source IP address, and the matching per-target profile:
 
 1. **Unknown Sources (DEFAULT profile)**:
 
@@ -698,6 +700,25 @@ Example:
 
   curl -u admin:admin https://localhost:4443/peers?action=del\&address=00:11:22:33:44:55
 
+Global Attackers Lists
+~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to per-target WHITE/BLACK/GRAY lists, nScrub supports **global attackers lists**,
+shared by all targets, so a blacklist (or whitelist) does not need to be loaded once per target.
+
+- The global list is checked **before** the per-target profile lookup described below: if the
+  relevant IP (source for WAN to LAN traffic) has an entry in the global list, that profile is 
+  used immediately and the per-target list is not consulted.
+- If there is no global match, traffic falls through to the normal per-target profile lookup
+  described in the rest of this section.
+- Any target can opt out and only use its own lists, ignoring the global list entirely, see
+  "Ignore the global attackers list for a target" in the Global Attackers Management section.
+- The global list only supports statically managed entries (added/loaded via CLI/REST). There is no
+  global equivalent of the per-target automatically-populated dynamic list, since dynamic detection
+  is based on a single target traffic.
+
+See the Global Attackers Management section for how to manage the global list via CLI/REST.
+
 Targets Management
 ------------------
 
@@ -1155,6 +1176,190 @@ Example:
 .. code-block:: console
 
   curl -u admin:admin -X POST https://localhost:4443/attackers?target_id=SCRBR1\&action=del\&list=Test -d '["1.1.1.1/32","2.2.2.2/32"]'
+
+Global Attackers Management
+----------------------------
+
+The global attackers list (see "Global Attackers List" above) is managed the same way as a
+per-target list, except calls omit ``target_id`` and use the ``/attackers/global`` endpoint (CLI:
+``attackers global ...``, a top-level command, as opposed to ``target ID attackers ...``). Updates
+are applied immediately to the live datapath, same as per-target lists. Note: the ``dynamic``,
+``search``, ``autopurging`` and ``expiration`` actions are not available for the global list.
+
+Read global attackers
+~~~~~~~~~~~~~~~~~~~~~
+
+Read the global attackers, specifying the list name, and filtering by profile.
+Note:
+
+ - profile=* means all the attackers, profile=white/black/gray to select IPs matching a profile
+ - list=* means all the lists
+ - up to 100 items are returned by default, or limit if provided. The offset parameter can be used to handle pagination.
+
+*CLI*
+
+.. code-block:: console
+
+  > attackers global show LISTNAME|* white|gray|black|*
+
+*REST*
+
+.. code-block:: console
+
+  curl -u <user>:<password> https://<host>:<port>/attackers/global?action=list\&profile={black, white, gray, *}\&list={<list name>, *}[\&offset=<offset>][\&limit=<max items>]
+
+Example:
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/attackers/global?action=list\&profile=*\&list=Test
+
+Add/Delete global attackers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add/del items from a global attacker list.
+
+*CLI*
+
+.. code-block:: console
+
+  > attackers global add LISTNAME SUBNET white|gray|black [SEC]
+  > attackers global del LISTNAME SUBNET
+
+*REST*
+
+.. code-block:: console
+
+  curl -u <user>:<password> https://<host>:<port>/attackers/global?action={add, del}\&list=<list name>\&subnet=<CIDR>[\&profile={black, white, gray}][\&lifetime=<seconds>]
+
+Example:
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/attackers/global?action=add\&list=Test\&subnet=10.10.11.1/32\&profile=black
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/attackers/global?action=del\&list=Test\&subnet=10.10.11.1/32
+
+Delete a global attacker list
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*CLI*
+
+.. code-block:: console
+
+  > attackers global purge LISTNAME
+
+*REST*
+
+.. code-block:: console
+
+  curl -u <user>:<password> https://<host>:<port>/attackers/global?action=list_del\&list=<list name>
+
+Example:
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/attackers/global?action=list_del\&list=Test
+
+Purge all global attackers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This also deletes all global lists.
+
+*CLI*
+
+.. code-block:: console
+
+  > attackers global purge all
+
+*REST*
+
+.. code-block:: console
+
+  curl -u <user>:<password> https://<host>:<port>/attackers/global?action=purge
+
+Example:
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/attackers/global?action=purge
+
+List all global attackers lists
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+List all global attackers lists (this also returns the number of entries in each list).
+
+*CLI*
+
+.. code-block:: console
+
+  > attackers global showlists
+
+*REST*
+
+.. code-block:: console
+
+  curl -u <user>:<password> https://<host>:<port>/attackers/global?action=list_ls
+
+Example:
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/attackers/global?action=list_ls
+
+Batch add/delete global attackers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add/del multiple items in a single call from a global attacker list (JSON array via POST).
+Note: add-fast action updates the datapath faster (less impact on traffic), however it flushes all dynamically-added IPs and does not handle duplicate items across lists
+
+*CLI*
+
+.. code-block:: console
+
+  > attackers global load LISTNAME FILEPATH white|gray|black [SEC]
+
+*REST*
+
+Example:
+
+.. code-block:: console
+
+  curl -u admin:admin -X POST https://localhost:4443/attackers/global?action={add, add-fast}\&list=Test\&profile=black -d '["1.1.1.1/32","2.2.2.2/32"]'
+
+.. code-block:: console
+
+  curl -u admin:admin -X POST https://localhost:4443/attackers/global?action=del\&list=Test -d '["1.1.1.1/32","2.2.2.2/32"]'
+
+Ignore the global attackers list for a target
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Per-target opt-out: when enabled, this target's traffic is matched only against its own per-target
+attackers list, ignoring the global attackers list entirely.
+
+*CLI*
+
+.. code-block:: console
+
+  > target ID attackers ignoreglobal [enable|disable]
+
+*REST*
+
+.. code-block:: console
+
+  curl -u <user>:<password> https://<host>:<port>/attackers/global/ignore?target_id=<target id>[\&action={enable, disable}]
+
+Example:
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/attackers/global/ignore?target_id=SCRBR1
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/attackers/global/ignore?target_id=SCRBR1\&action=enable
 
 Targets Profiles Configuration
 ------------------------------
