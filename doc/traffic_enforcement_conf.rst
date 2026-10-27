@@ -1596,6 +1596,14 @@ Example:
 Configure SYN check method
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Select the method used to validate TCP connections from sources that are not whitelisted:
+
+- rfc: the first SYN of a source is dropped, a legitimate client retransmits it according to the TCP specification and is whitelisted. This delays the first connection of each source by the client SYN retransmission timeout (usually 1 second).
+- proxy: nScrub answers the SYN with a SYN-ACK carrying a SYN cookie, and opens the connection to the server only after the client has completed the 3-way handshake; the traffic of the connection is then translated by nScrub. No delay is added. In asymmetric mode (wan to lan traffic only) this works as a SYN cookie check.
+- disable: no SYN check (default).
+
+SSL traffic (TCP port 443) is checked with the rfc method when the SYN check method is either rfc or proxy, unless a different method is configured with the SSL SYN check method setting below.
+
 *CLI*
 
 .. code-block:: console
@@ -1606,7 +1614,7 @@ Configure SYN check method
 
 .. code-block:: console
 
-  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/check_method?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={rfc, proxy, bypass}]
+  curl -u <user>:<password> https://<host>:<port>/profile/tcp/syn/check_method?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={rfc, proxy, disable}]
 
 Example:
 
@@ -1617,6 +1625,41 @@ Example:
 .. code-block:: console
 
   curl -u admin:admin https://localhost:4443/profile/tcp/syn/check_method?target_id=SCRBR1\&profile=default\&action=update\&value=rfc
+
+Configure SSL SYN check method
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default SSL traffic (TCP port 443) is checked with the rfc method when the SYN check method is
+either rfc or proxy, as methods based on connection reset can be an issue with some SSL clients.
+This setting overrides the method used for port 443:
+
+- rfc: always use the rfc method on port 443 (same as the default behaviour).
+- proxy: use the SYN proxy on port 443 too, avoiding the delay on the first connection of each source.
+- default: remove the override, the method is selected according to the SYN check method (reading the setting returns "default" when no override is configured).
+
+The override applies only when the SYN check method is enabled (rfc or proxy): when the SYN check method is disable, port 443 is not checked.
+
+*CLI*
+
+.. code-block:: console
+
+  > target ID profile white|gray|black|default ssl syn check_method [rfc|proxy|default]
+
+*REST*
+
+.. code-block:: console
+
+  curl -u <user>:<password> https://<host>:<port>/profile/ssl/syn/check_method?target_id=<target id>\&profile={black, white, gray, default}[\&action=update\&value={rfc, proxy, default}]
+
+Example:
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/profile/ssl/syn/check_method?target_id=SCRBR1\&profile=default
+
+.. code-block:: console
+
+  curl -u admin:admin https://localhost:4443/profile/ssl/syn/check_method?target_id=SCRBR1\&profile=default\&action=update\&value=proxy
 
 Configure SYN RFC check method threshold
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

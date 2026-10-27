@@ -6,7 +6,7 @@ In order to use the API over HTTPs you need to create a SSL certificate:
 
 .. code-block:: console
 
-   openssl req -new -x509 -sha1 -extensions v3_ca -nodes -days 365 -out cert.pem
+   openssl req -new -x509 -sha256 -extensions v3_ca -nodes -days 365 -out cert.pem
    cat privkey.pem cert.pem > /usr/share/nscrub/ssl/ssl-cert.pem
    rm -f privkey.pem cert.em
 
