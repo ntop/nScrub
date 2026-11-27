@@ -1,4 +1,4 @@
-![ntop][nscrub_logo]
+![nscrub_logo]
 # nScrub
 This repository contains open source components and extensions for nScrub available at http://www.ntop.org/products/ddos-mitigation/nscrub/
 
@@ -8,9 +8,7 @@ Here you can find:
 
 Enjoy!
 
-[nscrub_logo]: https://www.ntop.org/wp-content/uploads/2025/06/nscrub.png
-
-[ntop_logo]: https://camo.githubusercontent.com/58e2a1ecfff62d8ecc9d74633bd1013f26e06cba/687474703a2f2f7777772e6e746f702e6f72672f77702d636f6e74656e742f75706c6f6164732f323031352f30352f6e746f702e706e67
+[nscrub_logo]: https://www.ntop.org/images/2016/04/nscrub-logo.webp
 
 ### Documentation
 
