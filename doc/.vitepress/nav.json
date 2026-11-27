@@ -1,0 +1,109 @@
+{
+ "sidebar": [
+  {
+   "text": "User's Guide",
+   "items": [
+    {
+     "text": "Main Features",
+     "link": "/features"
+    },
+    {
+     "text": "Installation",
+     "link": "/install"
+    },
+    {
+     "text": "Models and Licenses",
+     "link": "/versions"
+    },
+    {
+     "text": "Engine Configuration",
+     "link": "/engine_conf"
+    },
+    {
+     "text": "Working Modes",
+     "link": "/working_modes"
+    },
+    {
+     "text": "Performance and Tuning",
+     "link": "/tuning"
+    },
+    {
+     "text": "Traffic Enforcement Configuration",
+     "link": "/traffic_enforcement_conf"
+    },
+    {
+     "text": "Traffic Visibility",
+     "link": "/monitoring"
+    },
+    {
+     "text": "Command line tools",
+     "link": "/cli"
+    },
+    {
+     "text": "Utilities and Testing",
+     "link": "/testing"
+    },
+    {
+     "text": "Hardware Bypass Support",
+     "link": "/hw_bypass"
+    }
+   ]
+  }
+ ],
+ "external": [
+  {
+   "text": "ntopng",
+   "link": "https://www.ntop.org/guides/ntopng/"
+  },
+  {
+   "text": "nProbe",
+   "link": "https://www.ntop.org/guides/nprobe/"
+  },
+  {
+   "text": "nProbe Cento",
+   "link": "https://www.ntop.org/guides/cento/"
+  },
+  {
+   "text": "n2disk",
+   "link": "https://www.ntop.org/guides/n2disk/"
+  },
+  {
+   "text": "nDPI",
+   "link": "https://www.ntop.org/guides/nDPI/"
+  },
+  {
+   "text": "PF_RING",
+   "link": "https://www.ntop.org/guides/pf_ring/"
+  },
+  {
+   "text": "nEdge",
+   "link": "https://www.ntop.org/guides/nedge/"
+  },
+  {
+   "text": "nScrub",
+   "link": "https://www.ntop.org/guides/nscrub/"
+  },
+  {
+   "text": "nBox",
+   "link": "https://www.ntop.org/guides/nbox/"
+  },
+  {
+   "text": "nTap",
+   "link": "https://www.ntop.org/guides/ntap/"
+  }
+ ],
+ "pages": {
+  "cli": "Command line tools",
+  "engine_conf": "Engine Configuration",
+  "features": "Main Features",
+  "hw_bypass": "Hardware Bypass Support",
+  "index": "nScrub Documentation",
+  "install": "Installation",
+  "monitoring": "Traffic Visibility",
+  "testing": "Utilities and Testing",
+  "traffic_enforcement_conf": "Traffic Enforcement Configuration",
+  "tuning": "Performance and Tuning",
+  "versions": "Models and Licenses",
+  "working_modes": "Working Modes"
+ }
+}
